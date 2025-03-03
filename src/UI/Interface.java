@@ -5,21 +5,22 @@ import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import Database.*;
 
+// Classe pour l'interface utilisateur
 public class Interface {
     public Interface() {
-        Database db = new Databaseimpl();
-        db.showTable();
+        Database db = new Databaseimpl(); // Initialiser la base de données
+        db.showTable(); // Afficher la table des employés
 
-        JFrame frame = new JFrame("Gestion des employés");
+        JFrame frame = new JFrame("Gestion des employés"); // Créer la fenêtre principale
         frame.setSize(720, 480);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(); // Créer le panneau principal
         panel.setLayout(new BorderLayout());
         panel.setBackground(new Color(240, 240, 240));
 
-        JPanel inputPanel = new JPanel();
+        JPanel inputPanel = new JPanel(); // Panneau pour les champs de saisie
         inputPanel.setLayout(new GridLayout(3, 2, 10, 10));
         inputPanel.setBackground(Color.WHITE);
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -31,7 +32,7 @@ public class Interface {
         inputPanel.add(champSalaire);
         panel.add(inputPanel, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel(); // Panneau pour les boutons
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(new Color(230, 230, 230));
         bouttonAjouter.setBackground(new Color(90, 144, 201));
@@ -48,7 +49,7 @@ public class Interface {
         buttonPanel.add(bouttonEffacer);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
-        JScrollPane scrollPane = new JScrollPane(tableau);
+        JScrollPane scrollPane = new JScrollPane(tableau); // Panneau de défilement pour la table
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         tableau.setFont(new Font("Arial", Font.PLAIN, 14));
         tableau.setRowHeight(25);
@@ -57,8 +58,9 @@ public class Interface {
         tableau.getTableHeader().setForeground(Color.WHITE);
         panel.add(scrollPane, BorderLayout.EAST);
 
-        frame.add(panel);
+        frame.add(panel); // Ajouter le panneau principal à la fenêtre
 
+        // Action pour le bouton Ajouter
         bouttonAjouter.addActionListener(e -> {
             String name = champNom.getText();
             String departement = (String) champDepartement.getSelectedItem();
@@ -68,12 +70,14 @@ public class Interface {
             db.showTable();
         });
 
+        // Action pour le bouton Effacer
         bouttonEffacer.addActionListener(e -> {
             champNom.setText("");
             champDepartement.setSelectedIndex(0);
             champSalaire.setText("");
         });
 
+        // Action pour le bouton Supprimer
         bouttonSupprimer.addActionListener(e -> {
             int row = tableau.getSelectedRow();
             if (row == -1) {
@@ -86,6 +90,7 @@ public class Interface {
             }
         });
 
+        // Action pour le bouton Modifier
         bouttonMaj.addActionListener(e -> {
             int row = tableau.getSelectedRow();
             if (row == -1) {
@@ -102,6 +107,7 @@ public class Interface {
         });
     }
 
+    // Déclaration des composants de l'interface
     JLabel titreNom = new JLabel("Nom : ");
     public static JTextField champNom = new JTextField();
 

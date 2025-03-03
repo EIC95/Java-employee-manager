@@ -4,15 +4,18 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import UI.Interface;
 
+// Implémentation de l'interface Database utilisant SQLite
 public class Databaseimpl implements Database {
-    private Connection conn;
+    private Connection conn; // Connexion à la base de données
 
+    // Constructeur pour initialiser la connexion à la base de données
     public Databaseimpl() {
         try {
             String url = "jdbc:sqlite:./employees.db";
             conn = DriverManager.getConnection(url);
             System.out.println("Connexion réussie à la base de données");
 
+            // Création de la table des employés si elle n'existe pas
             String creationDeTable = "CREATE TABLE IF NOT EXISTS employees (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name TEXT NOT NULL, " +
@@ -25,6 +28,7 @@ public class Databaseimpl implements Database {
         }
     }
 
+    // Ajouter un employé à la base de données
     @Override
     public void addEmployee(String name, String department, double salary) {
         try {
@@ -43,6 +47,7 @@ public class Databaseimpl implements Database {
         }
     }
 
+    // Supprimer un employé de la base de données
     @Override
     public void deleteEmployee(int id) {
         try {
@@ -52,11 +57,13 @@ public class Databaseimpl implements Database {
             preparedStatement.executeUpdate();
             System.out.println("Employé supprimé avec succès");
 
+            // Mettre à jour les IDs des employés restants
             String updateQuery = "UPDATE employees SET id = id - 1 WHERE id > ?";
             PreparedStatement updatePs = conn.prepareStatement(updateQuery);
             updatePs.setInt(1, id);
             updatePs.executeUpdate();
 
+            // Vérifier si la table est vide et réinitialiser l'auto-incrémentation
             String checkEmptyQuery = "SELECT COUNT(*) AS rowcount FROM employees";
             Statement checkStmt = conn.createStatement();
             ResultSet checkRs = checkStmt.executeQuery(checkEmptyQuery);
@@ -76,6 +83,7 @@ public class Databaseimpl implements Database {
         }
     }
 
+    // Mettre à jour les informations d'un employé
     @Override
     public void updateEmployee(int id, String name, String department, double salary) {
         try {
@@ -92,6 +100,7 @@ public class Databaseimpl implements Database {
         }
     }
 
+    // Afficher la table des employés
     @Override
     public void showTable() {
         try {
@@ -102,6 +111,7 @@ public class Databaseimpl implements Database {
             DefaultTableModel model = (DefaultTableModel) Interface.tableau.getModel();
             model.setRowCount(0);
 
+            // Ajouter les employés au modèle de table
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String name = resultSet.getString("name");
