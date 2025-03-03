@@ -3,7 +3,6 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 .idea/
-employees.db
 
 ### Eclipse ###
 .apt_generated
@@ -29,3 +28,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Database ###
+src/employees.db
