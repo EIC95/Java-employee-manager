@@ -29,5 +29,8 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### iml ###
+*.iml
+
 ### Database ###
 src/employees.db
