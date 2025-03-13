@@ -33,4 +33,4 @@ bin/
 *.iml
 
 ### Database ###
-src/employees.db
+Employee.db

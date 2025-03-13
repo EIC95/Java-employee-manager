@@ -1,8 +1,8 @@
 package Database;
+import UI.Interface;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import UI.Interface;
 
 // Implémentation de l'interface Database utilisant SQLite
 public class Databaseimpl implements Database {
@@ -11,7 +11,7 @@ public class Databaseimpl implements Database {
     // Constructeur pour initialiser la connexion à la base de données
     public Databaseimpl() {
         try {
-            String url = "jdbc:sqlite:./employees.db";
+            String url = "jdbc:sqlite:./Employee.db";
             conn = DriverManager.getConnection(url);
             System.out.println("Connexion réussie à la base de données");
 
