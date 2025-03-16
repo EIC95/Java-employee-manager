@@ -51,33 +51,35 @@ public class Databaseimpl implements Database {
     @Override
     public void deleteEmployee(int id) {
         try {
+            // Suppression de l'employé
             String requete = "DELETE FROM employees WHERE id = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(requete);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-            System.out.println("Employé supprimé avec succès");
 
-            // Mettre à jour les IDs des employés restants
-            String updateQuery = "UPDATE employees SET id = id - 1 WHERE id > ?";
-            PreparedStatement updatePs = conn.prepareStatement(updateQuery);
-            updatePs.setInt(1, id);
-            updatePs.executeUpdate();
-
-            // Vérifier si la table est vide et réinitialiser l'auto-incrémentation
-            String checkEmptyQuery = "SELECT COUNT(*) AS rowcount FROM employees";
-            Statement checkStmt = conn.createStatement();
-            ResultSet checkRs = checkStmt.executeQuery(checkEmptyQuery);
-            checkRs.next();
-            int count = checkRs.getInt("rowcount");
-            if (count == 0) {
-                String resetAutoincrementQuery = "DELETE FROM sqlite_sequence WHERE name='employees'";
-                Statement resetStmt = conn.createStatement();
-                resetStmt.executeUpdate(resetAutoincrementQuery);
+            for(int i = id + 1; i <= Interface.tableau.getRowCount(); i++) {
+                String updateQuery = "UPDATE employees SET id = id - 1 WHERE id = ?";
+                PreparedStatement updatePs = conn.prepareStatement(updateQuery);
+                updatePs.setInt(1, i);
+                updatePs.executeUpdate();
             }
 
-            String resetAutoincrementQuery = "DELETE FROM sqlite_sequence WHERE name='employees'";
-            Statement statement = conn.createStatement();
-            statement.executeUpdate(resetAutoincrementQuery);
+            // Récupérer le plus grand ID restant
+            String maxIdQuery = "SELECT MAX(id) FROM employees";
+            PreparedStatement maxIdPs = conn.prepareStatement(maxIdQuery);
+            ResultSet rs = maxIdPs.executeQuery();
+            int nextAutoIncrement = 1; // Valeur par défaut si la table est vide
+
+            if (rs.next() && rs.getObject(1) != null) {
+                nextAutoIncrement = rs.getInt(1) + 1;
+            }
+
+            // Mettre à jour l'auto-incrémentation
+            String resetAutoIncrement = "ALTER TABLE employees AUTO_INCREMENT = ?";
+            PreparedStatement resetStatement = conn.prepareStatement(resetAutoIncrement);
+            resetStatement.setInt(1, nextAutoIncrement);
+            resetStatement.executeUpdate();
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erreur lors de la suppression de l'employé: " + e.getMessage());
         }

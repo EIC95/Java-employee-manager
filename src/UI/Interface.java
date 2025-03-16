@@ -64,10 +64,21 @@ public class Interface {
         bouttonAjouter.addActionListener(e -> {
             String name = champNom.getText();
             String departement = (String) champDepartement.getSelectedItem();
-            double salaire = Double.parseDouble(champSalaire.getText().replaceAll("\\s+", ""));
-            db.addEmployee(name, departement, salaire);
-            model.setRowCount(0);
-            db.showTable();
+            String salaireText = champSalaire.getText().replaceAll("\\s+", "");
+
+            // Vérification des champs
+            if (name.isEmpty() || departement == null || salaireText.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs");
+            } else {
+                try {
+                    double salaire = Double.parseDouble(salaireText);
+                    db.addEmployee(name, departement, salaire);
+                    model.setRowCount(0);
+                    db.showTable();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Le salaire doit être un nombre valide");
+                }
+            }
         });
 
         // Action pour le bouton Effacer
@@ -94,15 +105,26 @@ public class Interface {
         bouttonMaj.addActionListener(e -> {
             int row = tableau.getSelectedRow();
             if (row == -1) {
-                JOptionPane.showMessageDialog(null, "Veuillez sélectionner un employé à modifier");
+                JOptionPane.showMessageDialog(null, "Veuillez sélectionner un employé à modifier dans le tableau.");
             } else {
-                int id = (int) tableau.getValueAt(row, 0);
                 String name = champNom.getText();
                 String departement = (String) champDepartement.getSelectedItem();
-                double salaire = Double.parseDouble(champSalaire.getText());
-                db.updateEmployee(id, name, departement, salaire);
-                model.setRowCount(0);
-                db.showTable();
+                String salaireText = champSalaire.getText();
+
+                // Vérification des champs
+                if (name.isEmpty() || departement == null || salaireText.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs");
+                } else {
+                    try {
+                        double salaire = Double.parseDouble(salaireText);
+                        int id = (int) tableau.getValueAt(row, 0);
+                        db.updateEmployee(id, name, departement, salaire);
+                        model.setRowCount(0);
+                        db.showTable();
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Le salaire doit être un nombre valide");
+                    }
+                }
             }
         });
     }
